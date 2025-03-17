@@ -1,38 +1,9 @@
 {
-    "fragen": [
-        "wo finde ich tickets"
-    ],
-    "antworten": [
-        "Du kannst Tickets auch an der Stadionkasse kaufen."
-    ],
     "feedback": [
         {
-            "frage": "wann ist das n\u00e4chste spiel der herrenmannschaft?",
-            "antwort": "N\u00e4chster Gegner: FC Moosburg",
-            "korrekt": false
-        },
-        {
-            "frage": "wann ist das n\u00e4chste spiel der herrenmannschaft?",
-            "falsche_antwort": "N\u00e4chster Gegner: FC Moosburg",
-            "richtige_antwort": "FC Moosburg",
-            "korrekt": false
-        },
-        {
-            "frage": "wann ist das n\u00e4chste spiel der herrenmannschaft?",
-            "falsche_antwort": "N\u00e4chster Gegner: FC Moosburg",
-            "richtige_antwort": "Moosburg",
-            "korrekt": false
-        },
-        {
-            "frage": "wer ist der beste spieler?",
-            "falsche_antwort": "p",
-            "richtige_antwort": "Christian Kranz",
-            "korrekt": false
-        },
-        {
-            "frage": "wer ist der beste spieler",
-            "falsche_antwort": "h",
-            "richtige_antwort": "Christian Kranz",
+            "frage": "trainer der zweiten mannschaft",
+            "falsche_antwort": "Der Trainer hei\u00dft Manfred B\u00f6hlert",
+            "richtige_antwort": "Markus Baumgartner",
             "korrekt": false
         }
     ]
