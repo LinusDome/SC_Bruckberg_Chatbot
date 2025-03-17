@@ -13,7 +13,7 @@ class SCBruckbergChatbot:
         if "spielplan" in frage or "nächster gegner" in frage or ("gegner" in frage and "herren" in frage):
             spiele = get_live_scores()  # Web Scraper verwenden
             if spiele:
-                return "\n".join(spiele)  # Gibt alle Spiele aus, die der Scraper abgerufen hat
+                return spiele  # Einfach den Text zurückgeben, ohne .join()
             else:
                 return "Leider konnte ich den Spielplan nicht finden."
 
