@@ -1,13 +1,6 @@
-#main
-from bot import SCBruckbergChatbot
+# main.py
+from gui_chatbot import start_chatbot_gui  # Importiere die Funktion, die die GUI startet
 
-bot = SCBruckbergChatbot()
-
-print("⚽ Willkommen beim SC Bruckberg Chatbot! Frag mich etwas über den Verein. (Tippe 'exit' zum Beenden)")
-
-while True:
-    user_input = input("Du: ")
-    if user_input.lower() == "exit":
-        print("Bot: Bis bald! ⚽")
-        break
-    print("Bot:", bot.antworten(user_input))
+if __name__ == "__main__":
+    # Starte die GUI, ohne den Benutzer nach einer Konsoleingabe zu fragen
+    start_chatbot_gui()  # Die ganze Interaktion passiert jetzt in der GUI

@@ -17,6 +17,12 @@
             "falsche_antwort": "Der Trainer hei\u00dft Manfred B\u00f6hlert",
             "richtige_antwort": "Markus Baumgartner",
             "korrekt": true
+        },
+        {
+            "frage": "wie hei\u00dft der zweite trainer der herrenmannschaft",
+            "falsche_antwort": "N\u00e4chster Gegner: FC Moosburg",
+            "richtige_antwort": "Markus Baumgartner",
+            "korrekt": true
         }
     ]
 }
