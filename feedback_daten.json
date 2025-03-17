@@ -4,7 +4,19 @@
             "frage": "trainer der zweiten mannschaft",
             "falsche_antwort": "Der Trainer hei\u00dft Manfred B\u00f6hlert",
             "richtige_antwort": "Markus Baumgartner",
-            "korrekt": false
+            "korrekt": true
+        },
+        {
+            "frage": "wie hei\u00dft der trainer der zweiten mannschaft",
+            "falsche_antwort": "Der Trainer hei\u00dft Manfred B\u00f6hlert",
+            "richtige_antwort": "Markus Baumgartner",
+            "korrekt": true
+        },
+        {
+            "frage": "wie hei\u00dft der trainer der zweiten mannschaft",
+            "falsche_antwort": "Der Trainer hei\u00dft Manfred B\u00f6hlert",
+            "richtige_antwort": "Markus Baumgartner",
+            "korrekt": true
         }
     ]
 }
