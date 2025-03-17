@@ -1,17 +1,19 @@
 import json
 
-# Beispiel-Daten für Training
-fragen = [
-    "Wer ist der beste Spieler?",
-    "Wie viele Teams hat der Verein?",
-    "Wann wurde der Verein gegründet?",
-]
-
-antworten = [
-    "Christian Kranz ist der beste Spieler.",
-    "Im Jahr 2025 hat der Verein aktuell 15 Teams.",
-    "Der Verein wurde 1946 gegründet.",
-]
+# Beispiel-Daten für Training mit Frage-Antwort-Zuordnung
+fragen_antworten = {
+    "wer ist der beste spieler": "Christian Kranz ist der beste Spieler.",
+    "wie viele teams hat der verein": "Im Jahr 2025 hat der Verein aktuell 15 Teams.",
+    "wann wurde der verein gegründet": "Der Verein wurde 1946 gegründet.",
+    "wie heißt das stadion des sc bruckberg": "Der SC Bruckberg spielt auf dem Sportgelände Bruckberg an der Dammstraße 12, 84079 Bruckberg.",
+    "welche farben hat der sc bruckberg": "Die Vereinsfarben sind Blau und Weiß.",
+    "wo liegt der sc bruckberg": "Der SC Bruckberg ist ein Fußballverein aus Bruckberg, Bayern.",
+    "wie lautet die adresse des sc bruckberg": "Die Vereinsadresse lautet: Dammstr. 12, 84079 Bruckberg.",
+    "hat der sc bruckberg eine website": "Ja, die Webseite des SC Bruckberg ist http://www.sc-bruckberg.de.",
+    "welche mannschaften hat der sc bruckberg": "Der SC Bruckberg stellt folgende Mannschaften: Herren, Herren-Reserve, A-Junioren, C-Junioren, D-Junioren, E-Junioren I und II, F-Junioren 1 (2 Teams), F-Junioren 2 (2 Teams) und Frauen.",
+    "in welchem bezirk spielt der sc bruckberg": "Der SC Bruckberg gehört zum Bezirk Niederbayern.",
+    "in welchem kreis spielt der sc bruckberg": "Der SC Bruckberg spielt im Kreis Niederbayern West.",
+ }
 
 # Feedback-Daten aus der JSON-Datei laden
 def lade_feedback():
@@ -19,26 +21,17 @@ def lade_feedback():
         with open("feedback_daten.json", "r") as file:
             feedback_data = json.load(file)
     except (FileNotFoundError, json.JSONDecodeError):
-        feedback_data = []
+        feedback_data = {"feedback": []}
     
     return feedback_data
 
-# Kombiniere die Daten aus data.py und die Feedback-Daten
+# Kombiniere statische Fragen mit Feedback-Daten
 def kombiniere_daten():
     feedback_data = lade_feedback()
     
-    # Annahme: feedback_data enthält "frage" und "korrekt" (ob die Antwort korrekt war)
-    fragen_feedback = [feedback["frage"] for feedback in feedback_data if feedback.get("korrekt", False)]
-    antworten_feedback = ["Feedback-Antwort" for _ in fragen_feedback]  # Setze eine allgemeine Antwort, basierend auf dem Feedback
-    
-    # Kombiniere die bestehenden Fragen und Feedback-Daten
-    combined_fragen = fragen + fragen_feedback
-    combined_antworten = antworten + antworten_feedback
-    
-    return combined_fragen, combined_antworten
+    for feedback in feedback_data["feedback"]:
+        if "frage" in feedback and "richtige_antwort" in feedback:
+            fragen_antworten[feedback["frage"]] = feedback["richtige_antwort"]
 
-# Definiere hier die Variablen, die später importiert werden
-fragen_antworten = {
-    "fragen": fragen,
-    "antworten": antworten
-}
+# Vor dem Start des Bots Feedback-Daten einbinden
+kombiniere_daten()

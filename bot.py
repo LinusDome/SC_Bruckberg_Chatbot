@@ -6,103 +6,102 @@ from data import fragen_antworten  # Vorab definierte Fragen und Antworten
 class SCBruckbergChatbot:
     def __init__(self):
         self.fragen_antworten = fragen_antworten
-        self.feedback_speicher_datei = "feedback_daten.json"  # Speicherort für negatives Feedback
+        self.feedback_speicher_datei = "feedback_daten.json"  # Speicherort für Feedback-Daten
+        self.lade_feedback_daten()  # Feedback-Daten beim Start laden
+
+    def lade_feedback_daten(self):
+        """Lädt die Feedback-Daten aus der JSON-Datei und integriert sie in die bekannten Antworten."""
+        try:
+            with open(self.feedback_speicher_datei, "r") as f:
+                feedback_daten = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            feedback_daten = {"feedback": []}
+
+        for feedback in feedback_daten.get("feedback", []):
+            frage = feedback.get("frage", "").lower()
+            richtige_antwort = feedback.get("richtige_antwort", "")
+
+            if frage and richtige_antwort:
+                self.fragen_antworten[frage] = [richtige_antwort]
 
     def antworten(self, frage):
-        frage = frage.lower()  # Frage in Kleinbuchstaben umwandeln
+        frage = frage.lower().strip()  # Normalisierung der Frage
 
-        # Wenn der Benutzer nach dem nächsten Gegner fragt
+        # Live-Daten für die Herrenmannschaft abrufen
         if "herrenmannschaft" in frage or "nächster gegner" in frage or ("gegner" in frage and "herren" in frage):
-            naechsterGegnerHerrenmannschaft = get_live_scores()  # Web Scraper verwenden
-            if naechsterGegnerHerrenmannschaft:
-                # Frage den Benutzer nach Feedback
-                feedback, richtige_antwort = self.hole_feedback(naechsterGegnerHerrenmannschaft)
-                if feedback == "nein":
-                    # Speichere negatives Feedback mit der richtigen Antwort
-                    self.speichere_negatives_feedback(frage, naechsterGegnerHerrenmannschaft, richtige_antwort)
-                return naechsterGegnerHerrenmannschaft
-            else:
-                return "Leider konnte ich den Spielplan nicht finden."
+            naechster_gegner = get_live_scores()
+            if naechster_gegner:
+                return self.feedback_prozess(frage, naechster_gegner)
+            return "Leider konnte ich den Spielplan nicht finden."
 
-        # Vorab definierte Fragen und Antworten (mit random Auswahl)
+        # Standardantworten durchsuchen
         for key in self.fragen_antworten:
             if key in frage:
-                antwort = random.choice(self.fragen_antworten[key])  # Zufällige Antwort aus mehreren Möglichkeiten
-                # Frage den Benutzer nach Feedback
-                feedback, richtige_antwort = self.hole_feedback(antwort)
-                if feedback == "nein":
-                    # Speichere negatives Feedback mit der richtigen Antwort
-                    self.speichere_negatives_feedback(frage, antwort, richtige_antwort)
-                return antwort
+                antwort = random.choice(self.fragen_antworten[key])
+                return self.feedback_prozess(frage, antwort)
 
         return "Tut mir leid, das weiß ich nicht. Frag mich etwas anderes!"
 
-    def hole_feedback(self, antwort):
-        """Fragt den Benutzer nach Feedback zur Antwort und ermöglicht eine Korrektur."""
+    def feedback_prozess(self, frage, antwort):
+        """Fragt den Benutzer nach Feedback zur Antwort und speichert Korrekturen."""
         print(f"Bot: War meine Antwort '{antwort}' korrekt? (ja/nein)")
 
         feedback = input("Bitte geben Sie 'ja' oder 'nein' ein: ").lower()
         while feedback not in ['ja', 'nein']:
-            print("Bitte geben Sie 'ja' oder 'nein' ein.")
-            feedback = input("War meine Antwort korrekt? (ja/nein): ").lower()
+            feedback = input("Bitte geben Sie 'ja' oder 'nein' ein: ").lower()
 
-        richtige_antwort = None
         if feedback == "nein":
-            richtige_antwort = input("Was wäre die richtige Antwort? ")
+            richtige_antwort = input("Was wäre die richtige Antwort? ").strip()
+            self.speichere_negatives_feedback(frage, antwort, richtige_antwort)
+            return f"Danke für dein Feedback! Ich habe gelernt, dass die richtige Antwort '{richtige_antwort}' ist."
 
-        return feedback, richtige_antwort
+        return antwort
 
     def speichere_negatives_feedback(self, frage, falsche_antwort, richtige_antwort):
-        """Speichert das negative Feedback (falsche Antworten) und die richtige Antwort für spätere Verbesserung."""
+        """Speichert das Feedback und verbessert die Antworten für zukünftige Anfragen."""
         try:
             with open(self.feedback_speicher_datei, "r") as f:
                 feedback_daten = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             feedback_daten = {"feedback": []}
 
+        # Sicherstellen, dass das Feedback-Datenfeld existiert
         if "feedback" not in feedback_daten:
             feedback_daten["feedback"] = []
 
+        # Feedback speichern
         feedback_daten["feedback"].append({
             "frage": frage,
             "falsche_antwort": falsche_antwort,
-            "richtige_antwort": richtige_antwort if richtige_antwort else "",  # Falls keine richtige Antwort eingegeben wurde, leere Zeichenkette speichern
-            "korrekt": False
+            "richtige_antwort": richtige_antwort
         })
 
+        # Speichern in JSON-Datei
         with open(self.feedback_speicher_datei, "w") as f:
             json.dump(feedback_daten, f, indent=4)
 
+        # Aktualisieren des internen Speichers
+        self.fragen_antworten[frage] = [richtige_antwort]
+
     def trainiere_model(self):
-        """Trainiert das Modell mit den gesammelten Trainingsdaten und Feedback-Daten."""
-        fragen_feedback, falsche_antworten_feedback, richtige_antworten_feedback = self.lade_feedback_daten()
-
-        print("Gesammelte Feedback-Daten zur Verbesserung des Modells:")
-        for frage, falsche_antwort, richtige_antwort in zip(fragen_feedback, falsche_antworten_feedback, richtige_antworten_feedback):
-            print(f"Frage: {frage}, Falsche Antwort: {falsche_antwort}, Richtige Antwort: {richtige_antwort}")
-
-    def lade_feedback_daten(self):
-        """Lädt die Feedback-Daten aus der JSON-Datei und gibt sie zurück."""
+        """Zeigt die gespeicherten Feedback-Daten an."""
         try:
             with open(self.feedback_speicher_datei, "r") as f:
                 feedback_daten = json.load(f)
         except (FileNotFoundError, json.JSONDecodeError):
             feedback_daten = {"feedback": []}
 
-        fragen_feedback = []
-        falsche_antworten_feedback = []
-        richtige_antworten_feedback = []
-
+        print("Gesammelte Feedback-Daten zur Verbesserung des Modells:")
         for feedback in feedback_daten.get("feedback", []):
-            fragen_feedback.append(feedback.get("frage", ""))
-            falsche_antworten_feedback.append(feedback.get("falsche_antwort", ""))
-            richtige_antworten_feedback.append(feedback.get("richtige_antwort", ""))
-
-        return fragen_feedback, falsche_antworten_feedback, richtige_antworten_feedback
-
+            print(f"Frage: {feedback['frage']}, Korrektur: {feedback['richtige_antwort']}")
 
 if __name__ == "__main__":
     bot = SCBruckbergChatbot()
-    frage = "Wann ist das nächste Spiel der Herrenmannschaft?"
-    print(bot.antworten(frage))
-    bot.trainiere_model()
+    print("⚽ Willkommen beim SC Bruckberg Chatbot! Frag mich etwas über den Verein. (Tippe 'exit' zum Beenden)")
+
+    while True:
+        user_input = input("Du: ").strip().lower()
+        if user_input == "exit":
+            print("Bot: Bis bald!")
+            break
+        print(f"Bot: {bot.antworten(user_input)}")

@@ -22,6 +22,18 @@
             "falsche_antwort": "N\u00e4chster Gegner: FC Moosburg",
             "richtige_antwort": "Moosburg",
             "korrekt": false
+        },
+        {
+            "frage": "wer ist der beste spieler?",
+            "falsche_antwort": "p",
+            "richtige_antwort": "Christian Kranz",
+            "korrekt": false
+        },
+        {
+            "frage": "wer ist der beste spieler",
+            "falsche_antwort": "h",
+            "richtige_antwort": "Christian Kranz",
+            "korrekt": false
         }
     ]
 }
