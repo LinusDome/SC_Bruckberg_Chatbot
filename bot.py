@@ -7,10 +7,10 @@ class SCBruckbergChatbot:
         self.fragen_antworten = fragen_antworten
 
     def antworten(self, frage):
-        frage = frage.lower()
+        frage = frage.lower()  # Frage in Kleinbuchstaben umwandeln
 
-        # Wenn der Benutzer nach dem Spielplan fragt, den Web Scraper verwenden
-        if "spielplan" in frage or "nächste spiele" in frage or "wann ist das nächste spiel" in frage:
+        # Wenn der Benutzer nach dem Spielplan oder dem nächsten Gegner fragt
+        if "spielplan" in frage or "nächster gegner" in frage or ("gegner" in frage and "herren" in frage):
             spiele = get_live_scores()  # Web Scraper verwenden
             if spiele:
                 return "\n".join(spiele)  # Gibt alle Spiele aus, die der Scraper abgerufen hat
