@@ -1,0 +1,27 @@
+{
+    "fragen": [
+        "wo finde ich tickets"
+    ],
+    "antworten": [
+        "Du kannst Tickets auch an der Stadionkasse kaufen."
+    ],
+    "feedback": [
+        {
+            "frage": "wann ist das n\u00e4chste spiel der herrenmannschaft?",
+            "antwort": "N\u00e4chster Gegner: FC Moosburg",
+            "korrekt": false
+        },
+        {
+            "frage": "wann ist das n\u00e4chste spiel der herrenmannschaft?",
+            "falsche_antwort": "N\u00e4chster Gegner: FC Moosburg",
+            "richtige_antwort": "FC Moosburg",
+            "korrekt": false
+        },
+        {
+            "frage": "wann ist das n\u00e4chste spiel der herrenmannschaft?",
+            "falsche_antwort": "N\u00e4chster Gegner: FC Moosburg",
+            "richtige_antwort": "Moosburg",
+            "korrekt": false
+        }
+    ]
+}

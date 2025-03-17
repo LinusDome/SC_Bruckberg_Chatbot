@@ -1,19 +1,19 @@
-import pickle
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
+import pickle
+from data import kombiniere_daten  # Importiere die Funktion zum Kombinieren der Daten
 
-# Beispiel-Daten für Training
-fragen = ["wann ist das nächste spiel?", "wo finde ich tickets?", "wer hat das letzte spiel gewonnen?", "wer sind die besten spieler?"]
-antworten = ["spiel", "tickets", "spielstand", "spieler"]
+# Kombiniere die Daten aus data.py und feedback_daten.json
+fragen, antworten = kombiniere_daten()
 
-# Vektorisierung (Text in Zahlen umwandeln)
+# Vektorisierung der Fragen (Umwandlung von Text in Zahlen)
 vectorizer = CountVectorizer()
 X_train = vectorizer.fit_transform(fragen)
 
-# Modell trainieren
+# Trainiere das Modell (Multinomial Naive Bayes)
 model = MultinomialNB()
 model.fit(X_train, antworten)
 
-# Modell speichern
+# Speichern des Modells und des Vektorisierers
 with open("models/chatbot_model.pkl", "wb") as f:
     pickle.dump((vectorizer, model), f)

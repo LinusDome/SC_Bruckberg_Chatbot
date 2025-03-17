@@ -1,12 +1,44 @@
-#müssen noch gefüllt werden
+import json
 
+# Beispiel-Daten für Training
+fragen = [
+    "Wer ist der beste Spieler?",
+    "Wie viele Teams hat der Verein?",
+    "Wann wurde der Verein gegründet?",
+]
+
+antworten = [
+    "Christian Kranz ist der beste Spieler.",
+    "Im Jahr 2025 hat der Verein aktuell 15 Teams.",
+    "Der Verein wurde 1946 gegründet.",
+]
+
+# Feedback-Daten aus der JSON-Datei laden
+def lade_feedback():
+    try:
+        with open("feedback_daten.json", "r") as file:
+            feedback_data = json.load(file)
+    except (FileNotFoundError, json.JSONDecodeError):
+        feedback_data = []
+    
+    return feedback_data
+
+# Kombiniere die Daten aus data.py und die Feedback-Daten
+def kombiniere_daten():
+    feedback_data = lade_feedback()
+    
+    # Annahme: feedback_data enthält "frage" und "korrekt" (ob die Antwort korrekt war)
+    fragen_feedback = [feedback["frage"] for feedback in feedback_data if feedback.get("korrekt", False)]
+    antworten_feedback = ["Feedback-Antwort" for _ in fragen_feedback]  # Setze eine allgemeine Antwort, basierend auf dem Feedback
+    
+    # Kombiniere die bestehenden Fragen und Feedback-Daten
+    combined_fragen = fragen + fragen_feedback
+    combined_antworten = antworten + antworten_feedback
+    
+    return combined_fragen, combined_antworten
+
+# Definiere hier die Variablen, die später importiert werden
 fragen_antworten = {
-    "wann ist das nächste spiel": ["Das nächste Spiel ist am Samstag um 15:30 Uhr gegen Bayern München.", 
-                                   "Am Sonntag spielen wir um 17:00 Uhr gegen Nürnberg."],
-    "wo finde ich tickets": ["Tickets gibt es auf unserer Website: www.scbruckberg.de/tickets",
-                             "Du kannst Tickets auch an der Stadionkasse kaufen."],
-    "wer hat das letzte spiel gewonnen": ["SC Bruckberg hat 2:1 gegen Dortmund gewonnen!", 
-                                          "Leider haben wir 1:3 gegen Leipzig verloren."],
-    "wer sind die besten spieler": ["Unsere Top-Spieler sind Max Mustermann und Leon Beispielmann.", 
-                                    "Unser bester Stürmer ist aktuell Tom Torjäger mit 10 Treffern."]
+    "fragen": fragen,
+    "antworten": antworten
 }
