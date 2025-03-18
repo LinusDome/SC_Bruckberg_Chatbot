@@ -38,12 +38,36 @@ class SCBruckbergChatbot:
         return antwort
 
     def _handle_naechster_gegner(self):
-        gegner_info = get_live_scores()
-        if not gegner_info:
+        # Web Scraper aufrufen, um die Spieldaten zu erhalten
+        spiel_info = get_live_scores()
+
+        # Falls `spiel_info` ein String ist, direkt zurückgeben
+        if isinstance(spiel_info, str):
+            return self._handle_feedback("Nächstes Spiel", spiel_info)
+
+        # Falls `spiel_info` kein Dictionary ist, Fehler behandeln
+        if not isinstance(spiel_info, dict):
             antwort = "Leider konnte ich den Spielplan nicht finden."
             logging.warning("Spielplan nicht gefunden.")
             return antwort
-        return self._handle_feedback("nächster Gegner", gegner_info)
+
+        # Extrahiere die relevanten Informationen
+        gegner = spiel_info.get("gegner", "Unbekannt")
+        datum = spiel_info.get("datum", "Datum unbekannt")
+        uhrzeit = spiel_info.get("uhrzeit", "Uhrzeit unbekannt")
+        ort = spiel_info.get("ort", "Spielort unbekannt")
+
+        # Formatierte Antwort
+        antwort = (
+            f"\U0001F4E2 **Nächstes Spiel:**\n"
+            f"\U0001F4C5 **Datum:** {datum}\n"
+            f"⏰ **Uhrzeit:** {uhrzeit}\n"
+            f"⚽ **Gegner:** {gegner}\n"
+            f"📍 **Spielort:** {ort}"
+        )
+
+        return self._handle_feedback("Nächstes Spiel", antwort)
+        return self._handle_feedback("Nächstes Spiel", antwort)
 
     def _handle_feedback(self, frage, antwort):
         print(f"Bot: War meine Antwort '{antwort}' korrekt? (ja/nein)")
